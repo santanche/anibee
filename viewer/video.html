@@ -17,9 +17,24 @@
    background-color: #666;
 }
 </style>
+<script>
+function start() {
+   var video = document.querySelector("#videoElement");
+
+   if (navigator.mediaDevices.getUserMedia) {
+     navigator.mediaDevices.getUserMedia({ video: true })
+       .then(function (stream) {
+         video.srcObject = stream;
+       })
+       .catch(function (err0r) {
+         console.log("Something went wrong!");
+       });
+   }
+}
+</script>
 </head>
  
-<body>
+<body onload="start()">
 <div id="container">
    <video autoplay="true" id="videoElement">
    
