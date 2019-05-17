@@ -1,6 +1,18 @@
 class Zoom {
 
 start() {
+  var video = document.querySelector("#videoElement");
+
+   if (navigator.mediaDevices.getUserMedia) {
+     navigator.mediaDevices.getUserMedia({ video: true })
+       .then(function (stream) {
+         video.srcObject = stream;
+       })
+       .catch(function (err0r) {
+         console.log("Something went wrong!");
+       });
+   }
+  
   this.imageZoom = this.imageZoom.bind(this);
   this.zoomInClicked = this.zoomInClicked.bind(this);
   this.zoomSameClicked = this.zoomSameClicked.bind(this);
