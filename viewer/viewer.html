@@ -6,21 +6,50 @@
 	<script src="viewer.js"></script>
 	<title>Viewer</title>
 </head>
-<body onload="Zoom.instance.start()">
+<body onload="Anim.instance.start()">
 	<div class="main-panel">
-		<div class="zoom-panel">
-    		<video autoplay="true" class="back-image" id="background-media"></video>
-            <!-- <img id="zoom-image" class="back-image" src="maquete.jpg"> -->
-            <img id="target-image" class="target-image-sty animated-image" src="bees.gif">
-    	</div>
-    	<div class="control-panel">
-            <div class="control-set">
-        		<img id="button-in"  class="control" src="zoom-in.svg" style="display:none">
-                <img id="button-same" class="control" src="zoom-same.svg">
-        		<img id="button-out" class="control" src="zoom-out.svg" style="display:none">
-                <img id="button-next"  class="control" src="next.svg">
-            </div>
-    	</div>
+		<div class="anim-panel">
+    		<video autoplay="true" class="back-media" id="background-media"></video>
+        <div id="target-image-1" class="target-image-sty">
+           <img class="inidivual-image" src="bee.gif">
+           <img class="inidivual-image" src="bee.gif" style="transform: translate(5px,5px)">
+           <img class="inidivual-image" src="bee.gif" style="transform: translate(0px,5px)">
+           <img class="inidivual-image" src="bee.gif" style="transform: translate(5px,0px)">
+        </div>
+        <div id="target-image-2" class="target-image-sty" style="display:none">
+           <img class="inidivual-image" src="bee.gif">
+           <img class="inidivual-image" src="bee.gif" style="transform: translate(5px,5px)">
+           <img class="inidivual-image" src="bee.gif" style="transform: translate(0px,5px)">
+           <img class="inidivual-image" src="bee.gif" style="transform: translate(5px,0px)">
+        </div>
+        <div id="target-image-3" class="target-image-sty" style="display:none">
+           <img class="inidivual-image" src="bee.gif">
+           <img class="inidivual-image" src="bee.gif" style="transform: translate(5px,5px)">
+           <img class="inidivual-image" src="bee.gif" style="transform: translate(0px,5px)">
+           <img class="inidivual-image" src="bee.gif" style="transform: translate(5px,0px)">
+        </div>
+        <div id="target-image-4" class="target-image-sty" style="display:none">
+           <img class="inidivual-image" src="bee.gif">
+           <img class="inidivual-image" src="bee.gif" style="transform: translate(5px,5px)">
+           <img class="inidivual-image" src="bee.gif" style="transform: translate(0px,5px)">
+           <img class="inidivual-image" src="bee.gif" style="transform: translate(5px,0px)">
+        </div>
+        <div id="target-image-5" class="target-image-sty" style="display:none">
+           <img class="inidivual-image" src="bee.gif">
+           <img class="inidivual-image" src="bee.gif" style="transform: translate(5px,5px)">
+           <img class="inidivual-image" src="bee.gif" style="transform: translate(0px,5px)">
+           <img class="inidivual-image" src="bee.gif" style="transform: translate(5px,0px)">
+        </div>
     </div>
+    <div class="control-panel">
+        <div class="control-set">
+            <img id="button-group-1" class="control" src="group-1.svg">
+            <img id="button-group-2" class="control" src="group-2.svg">
+            <img id="button-group-3" class="control" src="group-3.svg">
+            <img id="button-group-4" class="control" src="group-4.svg">
+            <img id="button-group-5" class="control" src="group-5.svg">
+        </div>
+    </div>
+   </div>
 </body>
 </html>

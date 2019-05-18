@@ -1,144 +1,96 @@
-class Zoom {
+class Anim {
 
 start() {
   var video = document.querySelector("#background-media");
 
-   if (navigator.mediaDevices.getUserMedia) {
-     navigator.mediaDevices.getUserMedia({ video: true })
-       .then(function (stream) {
-         video.srcObject = stream;
-       })
-       .catch(function (err0r) {
-         console.log("Something went wrong!");
-       });
-   }
+  if (navigator.mediaDevices.getUserMedia) {
+   navigator.mediaDevices.getUserMedia({ video: true })
+     .then(function (stream) {
+       video.srcObject = stream;
+     })
+     .catch(function (err0r) {
+       console.log("Something went wrong!");
+     });
+  }
 
-  this.imageZoom = this.imageZoom.bind(this);
-  this.zoomInClicked = this.zoomInClicked.bind(this);
-  this.zoomSameClicked = this.zoomSameClicked.bind(this);
-  this.zoomOutClicked = this.zoomOutClicked.bind(this);
-  this.nextClicked = this.nextClicked.bind(this);
-  this.zoomEnd = this.zoomEnd.bind(this);
+  this._groupMove = 1;
 
-  this._zoomImage = document.querySelector("#background-media");
-  this._zoomImage.addEventListener("click", this.imageZoom, false);
+  this.targetMove = this.targetMove.bind(this);
+  this.movementEnd = this.movementEnd.bind(this);
+  this.groupSelected = this.groupSelected.bind(this);
 
-  this._targetImage = document.querySelector("#target-image");
-  this._targetImage.addEventListener("animationend", this.zoomEnd, false);
+  this._backMedia = document.querySelector("#background-media");
+  this._backMedia.addEventListener("click", this.targetMove, false);
 
-  this._buttonZoomIn = document.querySelector("#button-in");
-  this._buttonZoomIn.addEventListener("click", this.zoomInClicked, false);
+  this._targetImage = [];
+  for (let ti = 0; ti < 5; ti++)
+     this._targetImage[ti] = document.querySelector("#target-image-" + (ti+1));
+  this._targetImage[0].
+      addEventListener("animationend", this.movementEnd, false);
 
-  this._buttonZoomSame = document.querySelector("#button-same");
-  this._buttonZoomSame.addEventListener("click", this.zoomSameClicked, false);
-
-  this._buttonZoomOut = document.querySelector("#button-out");
-  this._buttonZoomOut.addEventListener("click", this.zoomOutClicked, false);
-
-  this._buttonNext = document.querySelector("#button-next");
-  this._buttonNext.addEventListener("click", this.nextClicked, false);
-
-  // this._zoomImage.addEventListener("click", this.imageZoomIn, false);
+  document.querySelector("#button-group-1").
+     addEventListener("click", function(){Anim.instance.groupSelected(1)}, false);
+  document.querySelector("#button-group-2").
+     addEventListener("click", function(){Anim.instance.groupSelected(2)}, false);
+  document.querySelector("#button-group-3").
+     addEventListener("click", function(){Anim.instance.groupSelected(3)}, false);
+  document.querySelector("#button-group-4").
+     addEventListener("click", function(){Anim.instance.groupSelected(4)}, false);
+  document.querySelector("#button-group-5").
+     addEventListener("click", function(){Anim.instance.groupSelected(5)}, false);
 
   this._dimensions = this.screenDimensions();
-  this._shiftX = 0;
-  this._shiftY = 0;
-  this._scale = 1;
-  this._buttonState = 1;
-  this._storyCounter = 1;
 
-  this._pathPos = 0;
-  this._lastScale = 1;
   this._lastTransX = 0;
   this._lastTransY = 0;
 }
 
+/*
 zoomInClicked() {
   this._buttonZoomIn.style.display = "none";
-  this._buttonZoomSame.style.display = "inline";
+  this._buttonSelectGroup.style.display = "inline";
   this._buttonState = 2;
 }
+*/
 
-zoomSameClicked() {
-  this._buttonZoomSame.style.display = "none";
-  this._buttonZoomOut.style.display = "inline";
-  this._buttonState = 3;
+groupSelected(group) {
+   console.log("group " + group);
+   this._targetImage[this._groupMove-1].
+      removeEventListener("animationend", this.movementEnd, false);
+   this._targetImage[group-1].
+      addEventListener("animationend", this.movementEnd, false);
+   this._targetImage[group-1].style.display = "inline";
+   this._groupMove = group;
 }
 
-zoomOutClicked() {
-  this._buttonZoomOut.style.display = "none";
-  this._buttonZoomIn.style.display = "inline";
-  this._buttonState = 1;
-}
+moveTo(transX, transY) {
+  this.moveToAnim(transX, transY);
 
-nextClicked() {
-  const next = Zoom.path[this._pathPos];
-  const scale = next[0];
-  const transX = next[1] * this._dimensions.width / 1299;
-  const transY = next[2] * this._dimensions.height / 630;
-
-  this.zoomTo(scale, transX, transY);
-  this._pathPos++;
-}
-
-zoomTo(scale, transX, transY) {
-  if (scale <= 32)
-    this.zoomToAnim(scale, transX, transY);
-  else
-    this.zoomToStraight(scale, transX, transY);
-
-  this._lastScale = scale;
   this._lastTransX = transX;
   this._lastTransY = transY;
 }
 
-zoomToStraight(scale, transX, transY) {
-  console.log("strait: " + transX + ", " + transY);
-  console.log(this._targetImage);
-  this._targetImage.style.left = transX + "px";
-  this._targetImage.style.top = transY + "px";
-  console.log(this._targetImage);
-  /*
-  this._zoomImage.style.transform =
-    "scale(" + scale +
-    ") translate(" + transX + "px," + transY + "px)";
-  */
+moveToStraight(transX, transY) {
+  this._targetImage[this._groupMove-1].style.left = transX + "px";
+  this._targetImage[this._groupMove-1].style.top = transY + "px";
 }
 
-zoomToAnim(scale, transX, transY) {
+moveToAnim(transX, transY) {
   let rule = this.findKeyframesRule("image-anim");
 
-  /*
-  rule.appendRule("100% {transform: scale(" + scale +
-                    ") translate(" + transX + "px," +
-                    transY + "px)}");
-  */
   rule.appendRule("100% {left:" + transX + "px; top:" + transY + "px}");
 
-  this._targetImage.classList.add("animated-image");
+  this._targetImage[this._groupMove-1].classList.add("animated-image");
 }
 
-zoomEnd() {
-   this.zoomToStraight(this._lastScale,
-                       this._lastTransX, this._lastTransY);
-   this._targetImage.classList.remove("animated-image");
+movementEnd() {
+   this.moveToStraight(this._lastTransX, this._lastTransY);
+   this._targetImage[this._groupMove-1].classList.remove("animated-image");
 }
 
-imageZoom(event) {
-  /*
-  const transX = this._lastTransX +
-    ((this._dimensions.width / 2) - event.clientX) / this._lastScale;
-  const transY = this._lastTransY +
-    ((this._dimensions.height / 2) - event.clientY) / this._lastScale;
-
-  const scale = (this._buttonState == 1)
-    ? this._lastScale * 2
-    : (this._buttonState == 3)
-      ? this._lastScale / 2
-      : this._lastScale;
-  */
+targetMove(event) {
   console.log("translate(" + event.clientX + "px," + event.clientY + "px)");
-  this.zoomTo(1, event.clientX, event.clientY);
+  this.moveTo(event.clientX, event.clientY);
 }
 
 screenDimensions() {
@@ -177,17 +129,5 @@ findKeyframesRule(rule) {
 }
 
 (function() {
-
-   Zoom.path = [[8, 373, 195],
-                [8, 373, 70],
-                [8, 149, 66],
-                [1, 0, 0],
-                [8, -228, 203],
-                [8, -238, 75],
-                [8, -235, -59],
-                [8, -80, -82],
-                [1, 0, 0],
-                [8, 320, -191]];
-
-   Zoom.instance = new Zoom();
+   Anim.instance = new Anim();
 })();
