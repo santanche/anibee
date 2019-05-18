@@ -89,8 +89,10 @@ movementEnd() {
 }
 
 targetMove(event) {
-  console.log("translate(" + event.clientX + "px," + event.clientY + "px)");
-  this.moveTo(event.clientX, event.clientY);
+  const transX = event.clientX - 85;
+  const transY = event.clientY - 80;
+  console.log("translate(" + transX + "px," + transY + "px)");
+  this.moveTo(transX, transY);
 }
 
 screenDimensions() {
