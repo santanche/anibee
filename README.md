@@ -1,4 +1,4 @@
 # anibee
 Javascript interactive animations.
 
-[Video Test](viewer/video.html)
+[Animated Bees](viewer/viewer.html)
